@@ -1,0 +1,35 @@
+# # Created by venv; see https://docs.python.org/3/library/venv.html
+# *
+# /venv/
+# *.pyc
+# __pycache__/
+# # Django specific ignores
+# *.log
+# db.sqlite3
+# media/
+# staticfiles/
+# # Environment variables
+# .env
+
+
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+.venv/
+venv/
+env/
+
+*.log
+
+media/
+staticfiles/
+
+.pytest_cache/
+.mypy_cache/
+
+.coverage
+htmlcov/
+.env
+/rag
+/avatars
