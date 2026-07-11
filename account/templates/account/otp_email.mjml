@@ -1,0 +1,56 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text color="#444444" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f4f6f8">
+
+    <!-- Card Container -->
+    <mj-section padding="20px">
+      <mj-column background-color="#ffffff" padding="30px" border-radius="10px">
+
+        <!-- Header -->
+        <mj-text font-size="22px" font-weight="bold" align="center" color="#222222">
+          🔐 Verify Your Email
+        </mj-text>
+
+        <!-- Greeting -->
+        <mj-text font-size="16px" align="center">
+          Hello {{ email }},
+        </mj-text>
+
+        <!-- Message -->
+        <mj-text font-size="14px" align="center">
+          Use the OTP below to complete your verification. This code is valid for 5 minutes.
+        </mj-text>
+
+        <!-- OTP Box -->
+        <mj-text align="center" font-size="28px" font-weight="bold" color="#2a7fff" padding="20px 0">
+          {{ otp }}
+        </mj-text>
+
+        <!-- Divider -->
+        <mj-divider border-color="#eeeeee" />
+
+        <!-- Footer Message -->
+        <mj-text font-size="12px" align="center" color="#888888">
+          If you didn’t request this, you can safely ignore this email.
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" font-size="11px" color="#aaaaaa">
+          © 2026 YourApp. All rights reserved.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
