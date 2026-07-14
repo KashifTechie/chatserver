@@ -25,6 +25,7 @@ from .view import webhook_receiver
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
+    path('api/v1/users',include("account.urls")),
     path('api/v1/authentication',include("authentication.urls")),
     path('api/v1/', include("chat.urls")),
     path('api/v1/chat/',include("chat.urls")),
