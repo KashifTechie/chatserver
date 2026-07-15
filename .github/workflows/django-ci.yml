@@ -23,7 +23,7 @@
 #         run: |
 #           python manage.py test
 
-name: Django Runserver Check
+name: Django CI
 
 on:
   push:
@@ -55,9 +55,10 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -71,6 +72,7 @@ jobs:
         run: |
           cat > .env <<EOF
           KAFKA_BOOTSTRAP_SERVERS=localhost:29092
+
           REDIS_URL=redis://localhost:6379/0
 
           DRF_RECAPTCHA_SECRET_KEY=dummy
@@ -123,6 +125,21 @@ jobs:
           RMQ_PORT=5672
           EOF
 
+      - name: Verify .env
+        run: |
+          pwd
+          ls -la
+          echo "DATABASE_ENGINE:"
+          grep DATABASE_ENGINE .env
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            sleep 2
+          done
+        env:
+          PGPASSWORD: postgres
+
       - name: Run migrations
         run: |
           python manage.py migrate
@@ -130,8 +147,8 @@ jobs:
       - name: Start Django server
         run: |
           python manage.py runserver 0.0.0.0:8000 &
-          sleep 20
+          sleep 15
 
-      - name: Check server
+      - name: Verify server is running
         run: |
-          curl http://127.0.0.1:8000
+          curl http://127.0.0.1:8000/
