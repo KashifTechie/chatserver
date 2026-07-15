@@ -1,154 +1,26 @@
-# on:
-#   push:
-#     branches:
-#       - master
-#   pull_request:
-#     branches:
-#       - master
-
-# jobs:
-#   test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: 3.11
-#       - name: Install dependencies
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install -r requirements.txt
-#       - name: Run tests
-#         run: |
-#           python manage.py test
-
-name: Django CI
-
 on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  runserver:
+  test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: chatserver
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Create .env
-        run: |
-          cat > .env <<EOF
-          KAFKA_BOOTSTRAP_SERVERS=localhost:29092
-
-          REDIS_URL=redis://localhost:6379/0
-
-          DRF_RECAPTCHA_SECRET_KEY=dummy
-          DRF_RECAPTCHA_VERIFY_ENDPOINT=https://www.google.com/recaptcha/api/siteverify
-
-          DATABASE_NAME=chatserver
-          DATABASE_USER=postgres
-          DATABASE_PASS=postgres
-          DATABASE_ENGINE=pgsql
-          DATABASE_PORT=5432
-          DATABASE_HOST=127.0.0.1
-
-          EMAIL_HOST=smtp.gmail.com
-          EMAIL_PORT=587
-          EMAIL_USE_TLS=True
-          EMAIL_HOST_USER=dummy@example.com
-          EMAIL_HOST_PASSWORD=dummy
-
-          GOOGLE_OAUTH_CLIENT_ID=dummy
-          GOOGLE_OAUTH_CLIENT_SECRET=dummy
-          GOOGLE_OAUTH_REDIRECT_URI=http://localhost:8000/api/v1/authentication/google/login/callback
-
-          GITHUB_OAUTH_CLIENT_ID=dummy
-          GITHUB_OAUTH_CLIENT_SECRET=dummy
-          GITHUB_OAUTH_REDIRECT_URI=http://localhost:8000/api/v1/authentication/github/login/callback
-
-          X_OAUTH_CLIENT_ID=dummy
-          X_OAUTH_CLIENT_SECRET=dummy
-          X_OAUTH_REDIRECT_URI=http://localhost:8000/api/v1/authentication/x/login/callback
-
-          FACEBOOK_CLIENT_ID=dummy
-          FACEBOOK_CLIENT_SECRET=dummy
-          FACEBOOK_REDIRECT_URI=http://localhost:8000/api/v1/authentication/facebook/login/callback
-
-          LINKEDIN_CLIENT_ID=dummy
-          LINKEDIN_CLIENT_SECRET=dummy
-          LINKEDIN_REDIRECT_URI=http://localhost:8000/api/v1/authentication/linkedin/login/callback
-
-          FRONTEND_URL=http://localhost:5173
-
-          HUGGINGFACE_API_TOKEN=dummy
-
-          OPENAI_API_KEY=dummy
-          OPEN_AI_KEY=dummy
-
-          TASK_SERVICE=KAFKA
-          RMQ_USERNAME=myuser
-          RMQ_PASSWORD=mypassword
-          RMQ_HOST=localhost
-          RMQ_PORT=5672
-          EOF
-
-      - name: Verify .env
-        run: |
-          pwd
-          ls -la
-          echo "DATABASE_ENGINE:"
-          grep DATABASE_ENGINE .env
-
-      - name: Wait for PostgreSQL
-        run: |
-          until pg_isready -h localhost -p 5432 -U postgres; do
-            sleep 2
-          done
-        env:
-          PGPASSWORD: postgres
-
-      - name: Run migrations
-        run: |
-          python manage.py migrate
-
-      - name: Start Django server
-        run: |
-          python manage.py runserver 0.0.0.0:8000 &
-          sleep 15
-
-      - name: Verify server is running
-        run: |
-          curl http://127.0.0.1:8000/
+          python-version: 3.11
+      - name: Running my program
+        run: echo "This is my first selfmade GitHub Action workflow for Django project"
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
+      # - name: Run tests
+      #   run: |
+      #     python manage.py test
