@@ -3,14 +3,14 @@ import logging
 from django.contrib.auth import get_user_model
 from django.db import models, transaction
 from django.db.models import Q
-
+from .consumers import notify_socket, EventDTO
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Contact, Conversation, ConversationParticipant, Message
-from .serializers import (
+from chat.models import Contact, Conversation, ConversationParticipant, Message
+from chat.serializers import (
     # Request serializers
     CreateConversationRequestSerializer,
     SendMessageRequestSerializer,
@@ -312,9 +312,21 @@ class SendMessageView(APIView):
         conversation.last_message_at = msg.sent_at
         conversation.save(update_fields=["last_message", "last_message_at"])
 
+        # ── Broadcast to the WebSocket group so connected clients update live ──
+        notify_socket(
+            EventDTO(
+                id=str(msg.id),
+                sender_id=str(msg.sender_id),
+                text=msg.content,
+                time=msg.sent_at.isoformat(),
+            ),
+            conversation_id=str(conversation.id),
+        )
+
+
         response_serializer = MessageResponseSerializer(msg, context={"request": request})
         return Response(
-            {"message": "Message sent successfully.", "data": response_serializer.data},
+            {"message": "Message sent successfully."},
             status=status.HTTP_201_CREATED,
         )
 

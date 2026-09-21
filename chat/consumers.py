@@ -128,18 +128,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.conv_id = self.scope["url_route"]["kwargs"]["conversation_id"]
         self.group = f"chat_{self.conv_id}"
 
-        print("USER:", self.user)
-        print("USER ID:", self.user.id)
-        print("CONV ID:", self.conv_id)
+        logger.info("USER: %s", self.user)
+        logger.info("USER ID: %s", self.user.id)
+        logger.info("CONV ID: %s", self.conv_id)
 
         allowed = await database_sync_to_async(
                     lambda: Conversation.objects.filter(
                         id=self.conv_id,
-                        created_by=self.user.id
+                        participants__user=self.user
                     ).exists()
                 )()
-        print("ALLOWED:", allowed)
-        print("ACCEPTING SOCKET")
+        logger.info("ALLOWED: %s", allowed)
+        logger.info("ACCEPTING SOCKET")
         if not allowed:
             await self.close()
             return

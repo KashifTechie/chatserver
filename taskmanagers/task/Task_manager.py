@@ -1,12 +1,12 @@
-from taskmanagers.task.kafka.kafka_producer import KafkaProducer
+from taskmanagers.task.kafka.handler.k_producer import get_producer
 from taskmanagers.task.RabbitMQ.publisher import RMQProducer
 from django.conf import settings
 
 class TaskManager:
     def __init__(self):
-
+           
         if settings.TASK_SERVICE == "KAFKA":
-            self.tool = KafkaProducer()
+            self.tool = get_producer()
         elif  settings.TASK_SERVICE == "RABBITMQ":
             self.tool = RMQProducer()
         

@@ -15,12 +15,20 @@ import environ
 import urllib.parse
 
 # Initialise environment variables
+# env = environ.Env(
+#     DEBUG=(bool, False)
+# )
+# environ.Env.read_env()
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
-environ.Env.read_env()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,7 +43,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "8022-2409-40f2-1039-1ae4-1d77-16a1-92df-83c1.ngrok-free.app"
+    "8022-2409-40f2-1039-1ae4-1d77-16a1-92df-83c1.ngrok-free.app",
+    "20d5-2401-4900-93c0-1c2f-bc3a-ed03-81a8-a857.ngrok-free.app",
+    "3a15-2409-40f2-0-848f-d4aa-59f7-4ff8-bd62.ngrok-free.app",
+    "3bf8-2409-40f2-0-848f-d4aa-59f7-4ff8-bd62.ngrok-free.app"
     # "local.pegionchat.com"
 ]
 
@@ -237,11 +248,11 @@ CACHES = {
     }
 }
 
-DRF_RECAPTCHA_SECRET_KEY = os.getenv("DRF_RECAPTCHA_SECRET_KEY")
-DRF_RECAPTCHA_SITE_KEY = os.getenv("DRF_RECAPTCHA_SITE_KEY")
-DRF_RECAPTCHA_VERIFY_ENDPOINT = os.getenv("DRF_RECAPTCHA_VERIFY_ENDPOINT")
+DRF_RECAPTCHA_SECRET_KEY = env("DRF_RECAPTCHA_SECRET_KEY")
+DRF_RECAPTCHA_SITE_KEY = env("DRF_RECAPTCHA_SITE_KEY")
+DRF_RECAPTCHA_VERIFY_ENDPOINT = env("DRF_RECAPTCHA_VERIFY_ENDPOINT")
 
-EMAIL_SENDER_USER = os.getenv("EMAIL_SENDER_USER")
+# EMAIL_SENDER_USER = env("EMAIL_SENDER_USER")
 
 
 
@@ -299,11 +310,8 @@ RMQ_PORT=env("RMQ_PORT")
 OPEN_AI_KEY=env("OPEN_AI_KEY")
 
 
-######## kafka confif ########
-KAFKA_BOOTSTRAP_SERVERS = env("KAFKA_BOOTSTRAP_SERVERS")
 
-from taskmanagers.task.Task_manager import TaskManager
-TASK_MANAGER = TaskManager()
+
 
 
 from datetime import timedelta
@@ -322,3 +330,130 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
 }
+
+
+
+import os
+
+
+# ============================================================
+# Kafka Base Configuration
+# ============================================================
+
+KAFKA_BOOTSTRAP_SERVERS = env(
+    "KAFKA_BOOTSTRAP_SERVERS"
+)
+
+KAFKA_CLIENT_ID_PREFIX = env(
+    "KAFKA_CLIENT_ID_PREFIX"
+)
+
+KAFKA_SECURITY_PROTOCOL = env(
+    "KAFKA_SECURITY_PROTOCOL"
+)
+
+KAFKA_SASL_MECHANISM = env(
+    "KAFKA_SASL_MECHANISM"
+)
+
+KAFKA_SASL_USERNAME = env(
+    "KAFKA_SASL_USERNAME"
+)
+
+KAFKA_SASL_PASSWORD = env(
+    "KAFKA_SASL_PASSWORD"
+)
+
+KAFKA_REQUEST_TIMEOUT_MS = int(
+    env("KAFKA_REQUEST_TIMEOUT_MS")
+)
+
+KAFKA_CONNECTION_TIMEOUT_MS = int(
+    env("KAFKA_CONNECTION_TIMEOUT_MS")
+)
+
+KAFKA_METADATA_MAX_AGE_MS = int(
+    env("KAFKA_METADATA_MAX_AGE_MS")
+)
+
+
+# ============================================================
+# Kafka Producer
+# ============================================================
+
+KAFKA_PRODUCER_ACKS = env(
+    "KAFKA_PRODUCER_ACKS"
+)
+
+KAFKA_PRODUCER_ENABLE_IDEMPOTENCE = (
+    env("KAFKA_PRODUCER_ENABLE_IDEMPOTENCE")
+)
+
+KAFKA_PRODUCER_RETRIES = int(
+    env("KAFKA_PRODUCER_RETRIES")
+)
+
+KAFKA_PRODUCER_DELIVERY_TIMEOUT_MS = int(
+    env("KAFKA_PRODUCER_DELIVERY_TIMEOUT_MS")
+)
+
+KAFKA_PRODUCER_LINGER_MS = int(
+    env("KAFKA_PRODUCER_LINGER_MS")
+)
+
+KAFKA_PRODUCER_BATCH_SIZE = int(
+    env("KAFKA_PRODUCER_BATCH_SIZE")
+)
+
+KAFKA_PRODUCER_QUEUE_MAX_MESSAGES = int(
+    env("KAFKA_PRODUCER_QUEUE_MAX_MESSAGES")
+)
+
+KAFKA_PRODUCER_QUEUE_MAX_KBYTES = int(
+    env("KAFKA_PRODUCER_QUEUE_MAX_KBYTES")
+)
+
+
+# ============================================================
+# Kafka Consumer
+# ============================================================
+
+KAFKA_CONSUMER_AUTO_OFFSET_RESET = env(
+    "KAFKA_CONSUMER_AUTO_OFFSET_RESET"
+)
+
+KAFKA_CONSUMER_ENABLE_AUTO_COMMIT = (
+    env("KAFKA_CONSUMER_ENABLE_AUTO_COMMIT")
+)
+
+KAFKA_CONSUMER_SESSION_TIMEOUT_MS = int(
+    env("KAFKA_CONSUMER_SESSION_TIMEOUT_MS")
+)
+
+KAFKA_CONSUMER_HEARTBEAT_INTERVAL_MS = int(
+    env("KAFKA_CONSUMER_HEARTBEAT_INTERVAL_MS")
+)
+
+KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS = int(
+    env("KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS")
+)
+
+KAFKA_CONSUMER_FETCH_MIN_BYTES = int(
+    env("KAFKA_CONSUMER_FETCH_MIN_BYTES")
+)
+
+KAFKA_CONSUMER_FETCH_MAX_BYTES = int(
+    env("KAFKA_CONSUMER_FETCH_MAX_BYTES")
+)
+
+KAFKA_CONSUMER_FETCH_WAIT_MAX_MS = int(
+    env("KAFKA_CONSUMER_FETCH_WAIT_MAX_MS")
+)
+TASK_MANAGER_VERSION = int(
+    env("TASK_MANAGER_VERSION")
+)
+STATISTICS_INTERVAL_MS = int(
+    env("STATISTICS_INTERVAL_MS")
+)
+from taskmanagers.task.Task_manager import TaskManager
+TASK_MANAGER = TaskManager()

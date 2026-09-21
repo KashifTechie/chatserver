@@ -3,10 +3,10 @@ from rag_system.tasks import store_rag_knowledge
 
 CONSUMER_GROUP_MAPPINGS = {
     "message": {
-        "process_message": process_message,
+        "task.process_message": process_message,
     },
     "rag": {
-        "store_rag_knowledge":store_rag_knowledge
+        "task.store_rag_knowledge":store_rag_knowledge
     },
     "group3": {
         "payment.received": "handle_payment_received",

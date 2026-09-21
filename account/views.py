@@ -104,3 +104,27 @@ class ResendOTPView(APIView):
             return Response({"message": "A new OTP has been sent to your email."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        data = {
+            "id": user.id,
+            "email": user.email,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "whatsapp_number": user.whatsapp_number,
+            "avatar_url": user.avatar_url.url if user.avatar_url else None,
+            "is_verified": user.is_verified,
+            "registration_method": user.registration_method,
+        }
+        return Response(data, status=status.HTTP_200_OK)
